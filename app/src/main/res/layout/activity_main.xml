@@ -1,110 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/butAddImages"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:drawableLeft="@drawable/ic_add_a_photo_black_24dp"
-        android:text="@string/btn_add_images"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        >
+
+        <Button
+            android:id="@+id/butAddImages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:drawableLeft="@drawable/ic_add_a_photo_black_24dp"
+            android:text="@string/btn_add_images"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-    <TextView
-        android:id="@+id/tvSelectedCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/butAddImages" />
+        <TextView
+            android:id="@+id/tvSelectedCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/butAddImages" />
 
-    <ImageButton
-        android:id="@+id/butClearImages"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:src="@drawable/ic_clear_black_24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tvSelectedCount"
-        app:layout_constraintStart_toEndOf="@+id/tvSelectedCount"
-        app:layout_constraintTop_toTopOf="@+id/tvSelectedCount" />
-
-
-    <Button
-        android:id="@+id/butAddAudio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:drawableLeft="@drawable/ic_music_note_black_24dp"
-        android:text="@string/btn_add_audio"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/butClearImages" />
+        <ImageButton
+            android:id="@+id/butClearImages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_clear_black_24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvSelectedCount"
+            app:layout_constraintStart_toEndOf="@+id/tvSelectedCount"
+            app:layout_constraintTop_toTopOf="@+id/tvSelectedCount" />
 
 
-    <TextView
-        android:id="@+id/tvAudioFile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="@+id/butAddAudio"
-        app:layout_constraintTop_toBottomOf="@+id/butAddAudio" />
+        <Button
+            android:id="@+id/butAddAudio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:drawableLeft="@drawable/ic_music_note_black_24dp"
+            android:text="@string/btn_add_audio"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/butClearImages" />
 
-    <ImageButton
-        android:id="@+id/butClearAudio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:background="?attr/selectableItemBackground"
-        android:src="@drawable/ic_clear_black_24dp"
-        app:layout_constraintStart_toEndOf="@+id/tvAudioFile"
-        app:layout_constraintTop_toBottomOf="@+id/butAddAudio" />
 
-    <ImageView
-        android:id="@+id/ivPreview"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/butCreateTimeLapse"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvAudioFile" />
+        <TextView
+            android:id="@+id/tvAudioFile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="@+id/butAddAudio"
+            app:layout_constraintTop_toBottomOf="@+id/butAddAudio" />
 
-    <Button
-        android:id="@+id/butCreateTimeLapse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@android:color/holo_blue_dark"
-        android:drawableLeft="@drawable/ic_slideshow_white_24dp"
-        android:drawablePadding="16dp"
-        android:padding="16dp"
-        android:text="@string/btn_create_time_slaps"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <ImageButton
+            android:id="@+id/butClearAudio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:background="?attr/selectableItemBackground"
+            android:src="@drawable/ic_clear_black_24dp"
+            app:layout_constraintStart_toEndOf="@+id/tvAudioFile"
+            app:layout_constraintTop_toBottomOf="@+id/butAddAudio" />
 
-    <ProgressBar
-        android:id="@+id/progressEncoding"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/butClearAudio"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp"
+            android:text="@string/btn_video"
+            android:id="@+id/butAddVideo"
+            android:layout_marginStart="8dp"
+            android:drawableLeft="@drawable/ic_slideshow_black_24dp"
+            />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tvVideoFile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="@+id/butAddVideo"
+            app:layout_constraintTop_toBottomOf="@+id/butAddVideo" />
+
+        <ImageButton
+            android:id="@+id/butClearVideo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:background="?attr/selectableItemBackground"
+            android:src="@drawable/ic_clear_black_24dp"
+            app:layout_constraintStart_toEndOf="@+id/tvVideoFile"
+            app:layout_constraintTop_toBottomOf="@+id/butAddVideo" />
+
+        <ImageView
+            android:id="@+id/ivPreview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/butCreateTimeLapse"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/butClearVideo" />
+
+        <Button
+            android:id="@+id/butCreateTimeLapse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@android:color/holo_blue_dark"
+            android:drawableLeft="@drawable/ic_slideshow_white_24dp"
+            android:drawablePadding="16dp"
+            android:layout_marginTop="32dp"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/btn_create_time_slaps"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivPreview"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/progressEncoding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/butClearVideo" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</ScrollView>

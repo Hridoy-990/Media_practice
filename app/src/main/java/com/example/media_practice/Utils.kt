@@ -1,12 +1,15 @@
 package com.example.media_practice
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.MediaCodec
+import android.net.Uri
 import android.os.Build
+import android.provider.OpenableColumns
 import android.util.Size
 import androidx.appcompat.app.AppCompatActivity
 import java.lang.RuntimeException
@@ -101,8 +104,48 @@ fun performAudioSearch(activity: AppCompatActivity, code: Int) {
         "audio/3gpp", "audio/mpeg", "audio/x-ms-wma", "audio/x-wav", "audio/x-flac")
 }
 
+fun performVideoSearch(activity: AppCompatActivity, code: Int) {
+    performFileSearch(activity, code, false,
+        "video/*",
+        "video/3gpp",
+        "video/dl",
+        "video/dv",
+        "video/fli",
+        "video/m4v",
+        "video/mpeg",
+        "video/mp4",
+        "video/quicktime",
+        "video/vnd.mpegurl",
+        "video/x-la-asf",
+        "video/x-mng",
+        "video/x-ms-asf",
+        "video/x-ms-wm",
+        "video/x-ms-wmx",
+        "video/x-ms-wvx",
+        "video/x-msvideo",
+        "video/x-webex")
+}
+
 fun performImagesSearch(activity: AppCompatActivity, code: Int) {
     performFileSearch(activity, code, true,
         "image/*",
         "image/png", "image/jpeg", "image/tiff")
+}
+
+@SuppressLint("Range")
+fun getName(context: Context, fromUri: Uri): String? {
+    var name: String? = null
+
+    val cursor = context.contentResolver
+        .query(fromUri, null, null, null, null, null)
+
+    cursor.use { cursor ->
+        if (cursor?.moveToFirst() == true) {
+            name = cursor?.getString(
+                cursor?.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            )
+        }
+    }
+
+    return name
 }

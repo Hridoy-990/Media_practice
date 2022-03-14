@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
 
     private var selectedImgUris = ArrayList<Uri>()
     private var selectedAudioUri: Uri? = null
+    private var selectedVideoUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,10 +39,18 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState != null) {
             selectedImgUris = savedInstanceState.getParcelableArrayList("selectedImgUris")!!
             selectedAudioUri = savedInstanceState.getParcelable("selectedAudioUri")
+            selectedVideoUri = savedInstanceState.getParcelable("selectedVideoUri")
         }
 
         initView()
 
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        outState?.putParcelableArrayList("selectedImgUris", selectedImgUris)
+        outState?.putParcelable("selectedAudioUri", selectedAudioUri)
+        outState?.putParcelable("selectedVideoUri", selectedVideoUri)
     }
 
     private fun initView() {
@@ -84,9 +93,26 @@ class MainActivity : AppCompatActivity() {
 
         binding.butClearAudio.visibility = if (selectedAudioUri != null) View.VISIBLE else View.INVISIBLE
 
+        binding.butAddVideo.setOnClickListener {
+            if (needsStoragePermission(this@MainActivity)) {
+                requestStoragePermission(this@MainActivity, CODE_VIDEO_SEARCH)
+            }
+            else {
+                performVideoSearch(this@MainActivity, CODE_VIDEO_SEARCH)
+            }
+        }
+
+        binding.butClearVideo.setOnClickListener {
+            binding.butCreateTimeLapse.visibility = View.INVISIBLE
+            binding.butClearVideo.visibility = View.INVISIBLE
+            binding.tvVideoFile.text = ""
+        }
+
+        binding.butClearVideo.visibility = if (selectedVideoUri != null) View.VISIBLE else View.INVISIBLE
 
         binding.butCreateTimeLapse.setOnClickListener {
-            requestEncodeImages()
+            //requestEncodeImages()
+            requestConvertVideo()
         }
 
     }
@@ -99,7 +125,10 @@ class MainActivity : AppCompatActivity() {
             addImages(data!!)
         } else if (requestCode == CODE_AUDIO_SEARCH && resultCode == Activity.RESULT_OK) {
             addAudio(data!!)
+        } else if (requestCode == CODE_VIDEO_SEARCH && resultCode == Activity.RESULT_OK) {
+            addVideo(data!!)
         }
+
         else if (requestCode == CODE_ENCODING_FINISHED) {
             binding.progressEncoding.visibility = View.INVISIBLE
         }
@@ -113,21 +142,24 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, getString(R.string.warn_no_storage_permission), Toast.LENGTH_LONG)
                 .show()
         } else {
-            if (requestCode == CODE_IMAGE_SEARCH) {
-                performImagesSearch(
-                    this@MainActivity, CODE_IMAGE_SEARCH)
-            } else if (requestCode == CODE_AUDIO_SEARCH) {
-                performAudioSearch(
-                    this@MainActivity, CODE_AUDIO_SEARCH)
+            when (requestCode) {
+                CODE_IMAGE_SEARCH -> {
+                    performImagesSearch(
+                        this@MainActivity, CODE_IMAGE_SEARCH)
+                }
+                CODE_AUDIO_SEARCH -> {
+                    performAudioSearch(
+                        this@MainActivity, CODE_AUDIO_SEARCH)
+                }
+                CODE_VIDEO_SEARCH -> {
+                    performVideoSearch(
+                        this@MainActivity, CODE_VIDEO_SEARCH)
+                }
             }
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        super.onSaveInstanceState(outState, outPersistentState)
-        outState?.putParcelableArrayList("selectedImgUris", selectedImgUris)
-        outState?.putParcelable("selectedAudioUri", selectedAudioUri)
-    }
+
 
 
     override fun onResume() {
@@ -144,12 +176,21 @@ class MainActivity : AppCompatActivity() {
 
         val visibility = if (selectedImgUris.size > 0) View.VISIBLE else View.INVISIBLE
         binding.butClearImages.visibility = visibility
-        binding.butCreateTimeLapse.visibility = visibility
+        //binding.butCreateTimeLapse.visibility = visibility
 
         if (selectedAudioUri != null){
             binding.butClearAudio.visibility = View.VISIBLE
             binding.tvAudioFile.text = selectedAudioUri!!.lastPathSegment
         }
+
+        if (selectedVideoUri != null){
+            binding.butClearVideo.visibility = View.VISIBLE
+            binding.butCreateTimeLapse.visibility = View.VISIBLE
+            binding.tvVideoFile.text = getName(this, selectedVideoUri!!) ?: ""
+        }
+
+
+
 
         binding.tvSelectedCount.text = selectedImgUris.size.toString() + " images selected"
 
@@ -185,6 +226,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun requestConvertVideo() {
+        if (selectedVideoUri != null) {
+            val intent = Intent(this, EncodingService::class.java).apply {
+
+                action = EncodingService.ACTION_ENCODE_VIDEOS
+
+                putExtra(EncodingService.KEY_OUT_PATH, getOutputPath())
+                putExtra(EncodingService.KEY_INPUT_VID_URI, selectedVideoUri)
+
+                // We want this Activity to get notified once the encoding has finished
+                val pi = createPendingResult(CODE_ENCODING_FINISHED, intent, 0)
+                putExtra(EncodingService.KEY_RESULT_INTENT, pi)
+            }
+
+            startService(intent)
+
+            binding.progressEncoding.visibility = View.VISIBLE
+        } else {
+            Toast.makeText(this@MainActivity, getString(R.string.err_no_input_file),
+                Toast.LENGTH_LONG).show()
+        }
+    }
+
     private fun playPreview() {
         val outFile = File(getOutputPath())
         if (outFile.exists()) {
@@ -193,7 +257,7 @@ class MainActivity : AppCompatActivity() {
                 else Uri.parse(outFile.absolutePath)
 
             val intent = Intent(Intent.ACTION_VIEW, uri)
-                .setDataAndType(uri,"image/*")
+                .setDataAndType(uri,"video/*")
                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 .setDataAndType(uri, "video/mp4")
 
@@ -230,6 +294,11 @@ class MainActivity : AppCompatActivity() {
             binding.butCreateTimeLapse.visibility = View.VISIBLE
             binding.butClearImages.visibility = View.VISIBLE
         }
+
+        if (selectedVideoUri != null) {
+            binding.butCreateTimeLapse.visibility = View.VISIBLE
+            binding.butClearVideo.visibility = View.VISIBLE
+        }
     }
 
     private fun addAudio(data: Intent) {
@@ -242,6 +311,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun addVideo(data: Intent) {
+        if (data != null) {
+            if (data.data != null) {
+                selectedVideoUri = data.data
+                binding.tvVideoFile.text = getName(this, selectedVideoUri!!) ?: ""
+                binding.butClearVideo.visibility = View.VISIBLE
+            }
+        }
+
+        if (selectedVideoUri != null) {
+            binding.butCreateTimeLapse.visibility = View.VISIBLE
+            binding.butClearVideo.visibility = View.VISIBLE
+        }
+    }
+
     private fun getOutputPath(): String {
         return cacheDir.absolutePath + "/" + OUT_FILE_NAME
     }
@@ -251,8 +335,9 @@ class MainActivity : AppCompatActivity() {
 
         const val CODE_IMAGE_SEARCH = 1110
         const val CODE_AUDIO_SEARCH = 1111
-        const val CODE_ENCODING_FINISHED = 1112
-        const val CODE_THUMB = 1113
+        const val CODE_VIDEO_SEARCH = 1112
+        const val CODE_ENCODING_FINISHED = 1113
+        const val CODE_THUMB = 1114
 
         const val OUT_FILE_NAME = "out.mp4"
     }

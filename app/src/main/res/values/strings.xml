@@ -5,4 +5,6 @@
     <string name="btn_create_time_slaps">Create Time slaps</string>
     <string name="warn_no_storage_permission">Don\'t have permission to select images from external storage</string>
     <string name="err_one_file">You need to select multiple files</string>
+    <string name="btn_video">Add Video</string>
+    <string name="err_no_input_file">Select video file that you want to convert to grayscale first</string>
 </resources>

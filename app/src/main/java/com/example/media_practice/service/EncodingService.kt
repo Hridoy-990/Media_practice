@@ -9,6 +9,7 @@ import android.net.Uri
 import com.example.media_practice.media.AudioToVideoMuxer
 import com.example.media_practice.media.AudioTrackToAacConvertor
 import com.example.media_practice.media.TimeLapseEncoder
+import com.example.media_practice.media.VideoToGrayscaleConverter
 import java.io.File
 import java.security.InvalidParameterException
 
@@ -21,7 +22,16 @@ class EncodingService :  IntentService(TAG)  {
     override fun onHandleIntent(p0: Intent?) {
         when (p0?.action) {
             ACTION_ENCODE_IMAGES -> encodeImages(p0)
+            ACTION_ENCODE_VIDEOS -> encodeVideos(p0)
         }
+    }
+
+    private fun encodeVideos(intent: Intent) {
+        val outPath = intent?.getStringExtra(KEY_OUT_PATH)
+        val inputVidUri = intent?.getParcelableExtra<Uri>(KEY_INPUT_VID_URI)
+
+        VideoToGrayscaleConverter().convert(outPath!!,
+            contentResolver.openFileDescriptor(inputVidUri!!, "r")?.fileDescriptor!!)
     }
 
     private fun encodeImages(intent: Intent) {
@@ -87,10 +97,11 @@ class EncodingService :  IntentService(TAG)  {
         val TAG = this::class.java.simpleName
 
         const val ACTION_ENCODE_IMAGES = "eu.sisik.vidproc.action.ENCODE_IMAGES"
-
+        const val ACTION_ENCODE_VIDEOS = "eu.sisik.vidproc.action.ENCODE_VIDEOS"
         const val KEY_IMAGES = "eu.sisik.vidproc.key.IMAGES"
 
         const val KEY_AUDIO = "eu.sisik.vidproc.key.AUDIO"
+        const val KEY_INPUT_VID_URI = "eu.sisik.videotogreyscale.key.INPUT_VID_URI"
 
         const val KEY_OUT_PATH = "eu.sisik.vidproc.key.OUT_PATH"
 
