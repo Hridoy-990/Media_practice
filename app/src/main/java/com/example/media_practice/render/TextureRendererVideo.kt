@@ -103,6 +103,11 @@ class TextureRendererVideo {
             samplerHandle = GLES20.glGetUniformLocation(it, "texSampler")
         }
 
+        /**
+              glBindTexture — bind a named texture to a texturing target
+              glTexParameter — set texture parameters
+         */
+
         // Initialize buffers
         GLES20.glGenBuffers(2, bufferHandles, 0)
 
