@@ -86,15 +86,25 @@ class AudioToVideoMuxer {
     }
 
     @SuppressLint("WrongConstant")
+
+    /**
+    getSampleTime() gives you the number of microseconds since the beginning of the track until the start of the current sample.
+    getSampleFlags() gives you flags that are used by MediaCodec.
+    MediaMuxer is kind of the counterpart to MediaExtractor. It can take various tracks with audio and video and mux them into one final media file.
+    writeSampleData takes BufferInfor object as last argument. We can initialize the BufferInfo argument with information we get directly from MediaExtractor or MediaCodec.
+     */
+
+    // Extract all frames from selected track
     private fun muxVideo() {
         while (true) {
             val chunkSize = videoExtractor!!.readSampleData(buffer, 0)
 
             if (chunkSize >= 0) {
+
                 bufferInfo.presentationTimeUs = videoExtractor!!.sampleTime
                 bufferInfo.flags = videoExtractor!!.sampleFlags
                 bufferInfo.size = chunkSize
-
+                // Write encoded frames to muxer
                 muxer!!.writeSampleData(videoIndex, buffer, bufferInfo)
 
                 videoExtractor!!.advance()
