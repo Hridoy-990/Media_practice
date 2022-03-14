@@ -1,6 +1,7 @@
 package com.example.media_practice.media
 
 import android.media.*
+import android.util.Log
 import java.io.FileDescriptor
 import java.nio.ByteOrder
 import java.security.InvalidParameterException
@@ -223,6 +224,10 @@ class AudioTrackToAacConvertor {
         }
     }
 
+    /**
+           channel - The position of each audio source within the audio signal
+           sample - each specifying the amplitude of the audio waveform as measured for a given slice of the overall waveform of the audio signal
+     */
     private fun fade(inBufferId: Int, outBufferId: Int, getFactor : (elapsedMillis: Long) -> Double) {
         val inBuffer = encoder!!.getInputBuffer(inBufferId)
         val outBuffer = decoder!!.getOutputBuffer(outBufferId)
@@ -239,7 +244,10 @@ class AudioTrackToAacConvertor {
                 // Process the sample
                 var sample = shortSamples?.get()
 
+                Log.e(TAG, "format: $format channels : $channels size : $size  elapsedMillis : $elapsedMillis", )
+
                 // Put processed sample into encoder's buffer
+                // Increase volume exponentially or decrees
                 inBuffer?.putShort((sample * getFactor(elapsedMillis)).toInt().toShort())
             }
 
@@ -265,6 +273,10 @@ class AudioTrackToAacConvertor {
         muxer = null
 
         trackIndex = -1
+    }
+
+    companion object {
+        private const val TAG = "AudioConvertor"
     }
 
 }
