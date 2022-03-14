@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Media_Practice</string>
+    <string name="btn_add_images">Add Images</string>
+    <string name="btn_add_audio">Add Audio</string>
+    <string name="btn_create_time_slaps">Create Time slaps</string>
+    <string name="warn_no_storage_permission">Don\'t have permission to select images from external storage</string>
+    <string name="err_one_file">You need to select multiple files</string>
+</resources>
